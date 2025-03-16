@@ -875,9 +875,9 @@ pub fn main() !void {
     log("SIMD vector size: {d}\n", .{DEFAULT_VECTOR_WIDTH});
     log("\n", .{});
 
-    const data: []align(mem.page_size) u8 = blk: {
+    const data: []align(std.heap.page_size_min) u8 = blk: {
         const weights_size: usize = file_size - @sizeOf(ConfigReader);
-        const buffer = try allocator.alignedAlloc(u8, mem.page_size, weights_size);
+        const buffer = try allocator.alignedAlloc(u8, std.heap.page_size_min, weights_size);
         const read_len = try checkpoint.readAll(buffer);
         if (read_len != weights_size) {
             std.debug.print("error: failed to read checkpoint file\n", .{});
